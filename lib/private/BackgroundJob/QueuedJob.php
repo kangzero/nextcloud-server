@@ -25,6 +25,7 @@
 namespace OC\BackgroundJob;
 
 use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class QueuedJob

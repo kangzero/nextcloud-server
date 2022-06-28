@@ -76,8 +76,7 @@ class GetSharedSecretTest extends TestCase {
 	/** @var \PHPUnit\Framework\MockObject\MockObject|ITimeFactory */
 	private $timeFactory;
 
-	/** @var GetSharedSecret */
-	private $getSharedSecret;
+	private GetSharedSecret $getSharedSecret;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -113,7 +112,7 @@ class GetSharedSecretTest extends TestCase {
 	 * @param bool $isTrustedServer
 	 * @param bool $retainBackgroundJob
 	 */
-	public function testExecute($isTrustedServer, $retainBackgroundJob) {
+	public function testExecute(bool $isTrustedServer, bool $retainBackgroundJob): void {
 		/** @var GetSharedSecret |\PHPUnit\Framework\MockObject\MockObject $getSharedSecret */
 		$getSharedSecret = $this->getMockBuilder('OCA\Federation\BackgroundJob\GetSharedSecret')
 			->setConstructorArgs(
@@ -132,9 +131,9 @@ class GetSharedSecretTest extends TestCase {
 		$this->trustedServers->expects($this->once())->method('isTrustedServer')
 			->with('url')->willReturn($isTrustedServer);
 		if ($isTrustedServer) {
-			$getSharedSecret->expects($this->once())->method('parentExecute');
+			$getSharedSecret->expects($this->once())->method('parentStart');
 		} else {
-			$getSharedSecret->expects($this->never())->method('parentExecute');
+			$getSharedSecret->expects($this->never())->method('parentStart');
 		}
 		$this->invokePrivate($getSharedSecret, 'retainJob', [$retainBackgroundJob]);
 		$this->jobList->expects($this->once())->method('remove');
